@@ -1,0 +1,28 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+ENV/
+.env/
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Local development settings
+.env
+
+# Redis dump files
+*.rdb
+dump.rdb
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo

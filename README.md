@@ -1,66 +1,120 @@
-# Redis Use Cases Examples
+# Redis Use Cases Demo - Java
 
-This repository demonstrates common Redis use cases with Python, focusing on:
+Dự án này triển khai 4 use case phổ biến của Redis bằng Java, giúp bạn hiểu rõ về cách sử dụng Redis trong các kịch bản thực tế. Mỗi ví dụ có thể chạy độc lập và đều có đầy đủ chú thích bằng tiếng Việt.
 
-1. **Distributed Locking**: Coordinate access to shared resources across distributed systems
+## Các use case được triển khai
 
-## Prerequisites
+1. **Redis Cache** - Cơ chế cache đơn giản cho ứng dụng
+2. **Redis Session Manager** - Quản lý phiên người dùng với cơ chế tự động hết hạn
+3. **Redis Rate Limiter** - Giới hạn tốc độ truy cập API
+4. **Redis Distributed Lock** - Khóa phân tán cho các hệ thống phân tán
 
-- Python 3.6+
-- Redis server (local or remote)
+## Yêu cầu hệ thống
 
-## Installation
+- Java JDK 11 trở lên
+- Maven
+- Redis Server (local hoặc remote)
 
+## Cài đặt và chạy
+
+### Cài đặt Redis
+
+#### Trên macOS (sử dụng Homebrew):
 ```bash
-# Clone the repository
-cd redis-use-cases
-
-# Install dependencies
-pip install redis
-python distributed_lock.py
+brew install redis
+brew services start redis
 ```
 
-## Configuration
-
-Modify the Redis connection settings in `config.py` if needed:
-
-```python
-REDIS_HOST = os.environ.get('REDIS_HOST', 'localhost')
-REDIS_PORT = int(os.environ.get('REDIS_PORT', 6379))
+#### Trên Ubuntu/Debian:
+```bash
+sudo apt update
+sudo apt install redis-server
+sudo systemctl start redis-server
 ```
 
-You can also set these values via environment variables.
+### Cài đặt dự án
 
-### Distributed Lock
+1. Clone dự án:
+```bash
+git clone https://github.com/yourusername/redis-use-case.git
+cd redis-use-case
+```
 
-The distributed lock provides synchronized access to shared resources across multiple processes or servers.
+2. Biên dịch dự án bằng Maven:
+```bash
+mvn clean compile
+```
 
-This example:
+### Chạy các ví dụ
 
-- Compares counter updates with and without distributed locking
-- Shows how race conditions can lead to lost updates without proper locking
-- Demonstrates how to implement and use a Redis-based distributed lock
+Mỗi file Java đều có phương thức `main()` để chạy demo độc lập:
 
-### Distributed Locking
+#### Chạy Redis Cache demo:
+```bash
+mvn exec:java -Dexec.mainClass="RedisCache"
+```
 
-Redis distributed locking uses:
+#### Chạy Redis Session Manager demo:
+```bash
+mvn exec:java -Dexec.mainClass="RedisSessionManager"
+```
 
-- Atomic operations to ensure only one process holds the lock at a time
-- Lock timeouts to prevent deadlocks
-- Unique lock values to prevent lock stealing
-- Retry mechanisms for high availability
+#### Chạy Redis Rate Limiter demo:
+```bash
+mvn exec:java -Dexec.mainClass="RedisRateLimiter"
+```
 
-## Real-World Applications
+#### Chạy Redis Distributed Lock demo:
+```bash
+mvn exec:java -Dexec.mainClass="RedisDistributedLock"
+```
 
-- **Distributed Locking**: Database updates, file access, financial transactions, scheduled tasks
+## Chi tiết triển khai
 
-## Additional Redis Use Cases
+### 1. RedisCache.java
 
-Other common Redis use cases not demonstrated in this repo:
+Triển khai cơ chế cache đơn giản với Redis. Các tính năng:
+- Lưu trữ dữ liệu với thời gian hết hạn
+- Lấy dữ liệu từ cache
+- Xóa dữ liệu khỏi cache
+- Demo so sánh thời gian truy xuất có và không có cache
 
-- Caching
-- Pub/Sub messaging
-- Leader election
-- Session management
-- Job queues
-- Real-time analytics
+### 2. RedisSessionManager.java
+
+Quản lý phiên người dùng với Redis. Các tính năng:
+- Tạo phiên mới với thời gian hết hạn
+- Lấy, cập nhật và xóa thông tin phiên
+- Gia hạn thời gian phiên
+- Kiểm tra tính hợp lệ của phiên
+- Demo cơ chế tự động hết hạn
+
+### 3. RedisRateLimiter.java
+
+Giới hạn tốc độ truy cập với Redis. Các tính năng:
+- Triển khai thuật toán "Fixed Window Counter"
+- Giới hạn số lượng request trong một khoảng thời gian
+- Lấy thông tin số request còn lại và thời gian còn lại
+- Demo kịch bản giới hạn tốc độ truy cập API
+
+### 4. RedisDistributedLock.java
+
+Khóa phân tán với Redis. Các tính năng:
+- Lấy và giải phóng khóa an toàn
+- Đảm bảo chỉ owner mới có thể giải phóng khóa (sử dụng Lua script)
+- Tự động giải phóng khóa sau thời gian chờ
+- Demo làm việc với dữ liệu dùng chung giữa các thread
+
+## Lưu ý quan trọng
+
+- Đảm bảo Redis server đang chạy trước khi thực thi các ví dụ
+- Các ví dụ mặc định kết nối đến Redis server tại `localhost:6379`
+- Bạn có thể thay đổi cấu hình kết nối trong constructor của mỗi class
+
+## Tài liệu tham khảo
+
+- [Redis Documentation](https://redis.io/documentation)
+- [Jedis Wiki](https://github.com/redis/jedis/wiki)
+
+## Đóng góp
+
+Nếu có bất kỳ câu hỏi hoặc đề xuất cải tiến, vui lòng tạo issue hoặc pull request. 
